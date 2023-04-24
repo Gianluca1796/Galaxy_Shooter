@@ -7,6 +7,9 @@ public class PowerUp : MonoBehaviour
     [SerializeField]
     private float _speed = 3.0f;
 
+    [SerializeField]
+    private int powerUpID;
+
     void Update()
     {
         transform.Translate(Vector3.down * Time.deltaTime * _speed);
@@ -21,9 +24,16 @@ public class PowerUp : MonoBehaviour
 
             if (player != null)
             {
-                player.TripleShotPowerUpOn();
+                if (powerUpID == 0)
+                {
+                    player.TripleShotPowerUpOn();
+                }
+                else if (powerUpID == 1)
+                {
+                    player.SpeedUpPowerUpOn();
+                }
             }
-            
+
             Destroy(this.gameObject);
         }
     }

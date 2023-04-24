@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
 {
 
     public bool canTripleShoot = false;
+    public bool isSpeedBoostActive = false;
     [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
@@ -61,6 +62,15 @@ public class Player : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float vericalInput = Input.GetAxis("Vertical");
 
+        if(isSpeedBoostActive)
+        {
+            _speed = 15.0f;
+        }
+        else
+        {
+            _speed = 5.0f;
+        }
+
         transform.Translate(Vector3.right * _speed * horizontalInput * Time.deltaTime);
         transform.Translate(Vector3.up * _speed * vericalInput * Time.deltaTime);
 
@@ -90,9 +100,20 @@ public class Player : MonoBehaviour
         canTripleShoot = true;
         StartCoroutine(TripleShotPowerDownRoutine());
     }
+
+    public void SpeedUpPowerUpOn()
+    {
+        isSpeedBoostActive = true;
+        StartCoroutine(SpeedUpDownCoroutine());
+    }
     public IEnumerator TripleShotPowerDownRoutine()
     {
         yield return new WaitForSeconds(5.0f);
         canTripleShoot = false;
+    }
+    public IEnumerator SpeedUpDownCoroutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+        isSpeedBoostActive = false;
     }
 }
