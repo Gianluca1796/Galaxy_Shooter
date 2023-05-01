@@ -11,6 +11,10 @@ public class Player : MonoBehaviour
     public bool isSpeedBoostActive = false;
     public bool isShieldActive = false;
     public int lives = 3;
+    private int hitCount = 0;
+
+    [SerializeField]
+    private GameObject[] engines;
 
     [SerializeField]
     private GameObject _laserPrefab;
@@ -38,21 +42,26 @@ public class Player : MonoBehaviour
     private GameManager _gameManager;
     private SpawnManager _spawnManager;
 
+    private AudioSource laserShot;
+
 
     private void Start()
     {
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-        if( _uiManager != null )
+        if (_uiManager != null)
         {
             _uiManager.UpdateLives(lives);
         }
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
 
-        if( _spawnManager != null ) 
+        if (_spawnManager != null)
         {
             _spawnManager.StartSpawnRoutine();
         }
+
+        laserShot = GetComponent<AudioSource>();
+        hitCount = 0;
     }
     void Update()
     {
@@ -81,11 +90,14 @@ public class Player : MonoBehaviour
     private void Shoot()
     {
         Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.95f, 0), Quaternion.identity);
+        laserShot.Play();
     }
 
     private void TripleShoot()
     {
         Instantiate(_trpleShootPrefab, transform.position, Quaternion.identity);
+        laserShot.Play();
+
     }
     private void playerMovement()
     {
@@ -127,6 +139,9 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
+
+
+
         if (isShieldActive)
         {
             isShieldActive = false;
@@ -134,6 +149,17 @@ public class Player : MonoBehaviour
 
             return;
         }
+
+        hitCount++;
+        if (hitCount == 1)
+        {
+            engines[0].SetActive(true);
+        }
+        else if (hitCount == 2)
+        {
+            engines[1].SetActive(true);
+        }
+
 
 
         lives--;

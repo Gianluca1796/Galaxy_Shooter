@@ -9,6 +9,9 @@ public class EnemyAI : MonoBehaviour
     [SerializeField]
     private GameObject _enemyExplosion;
     private UIManager _uiManager;
+    [SerializeField]
+    private AudioClip _audioClip;
+
 
 
     private void Start()
@@ -42,6 +45,7 @@ public class EnemyAI : MonoBehaviour
             Destroy(other.gameObject);
             Instantiate(_enemyExplosion, this.transform.position, Quaternion.identity);
             _uiManager.UpdateScore();
+            AudioSource.PlayClipAtPoint(_audioClip, Camera.main.transform.position);
             Destroy(this.gameObject);
         }
         else if (other.CompareTag("Player"))
@@ -52,7 +56,7 @@ public class EnemyAI : MonoBehaviour
             {
                 player.Damage();
                 Instantiate(_enemyExplosion, this.transform.position, Quaternion.identity);
-                
+                AudioSource.PlayClipAtPoint(_audioClip, Camera.main.transform.position);
                 Destroy(this.gameObject);
             }
         }
