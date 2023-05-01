@@ -6,19 +6,15 @@ public class EnemyAI : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 5.0f;
-    //[SerializeField]
-    //private GameObject _enemy;
     [SerializeField]
     private GameObject _enemyExplosion;
+    private UIManager _uiManager;
 
 
-
-
-    void Start()
+    private void Start()
     {
-      
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
     }
-
     void Update()
     {
         transform.Translate(Vector3.down * Time.deltaTime * _speed);
@@ -45,7 +41,7 @@ public class EnemyAI : MonoBehaviour
             }
             Destroy(other.gameObject);
             Instantiate(_enemyExplosion, this.transform.position, Quaternion.identity);
-            Destroy(_enemyExplosion, 5);
+            _uiManager.UpdateScore();
             Destroy(this.gameObject);
         }
         else if (other.CompareTag("Player"))
@@ -55,8 +51,8 @@ public class EnemyAI : MonoBehaviour
             if (player != null)
             {
                 player.Damage();
-                //player.InstantiateExplosion();
                 Instantiate(_enemyExplosion, this.transform.position, Quaternion.identity);
+                
                 Destroy(this.gameObject);
             }
         }

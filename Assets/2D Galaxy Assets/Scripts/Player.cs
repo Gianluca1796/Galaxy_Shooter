@@ -34,8 +34,26 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _speed = 5.0f;
 
+    private UIManager _uiManager;
+    private GameManager _gameManager;
+    private SpawnManager _spawnManager;
 
 
+    private void Start()
+    {
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        if( _uiManager != null )
+        {
+            _uiManager.UpdateLives(lives);
+        }
+        _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
+        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+
+        if( _spawnManager != null ) 
+        {
+            _spawnManager.StartSpawnRoutine();
+        }
+    }
     void Update()
     {
         playerMovement();
@@ -119,11 +137,15 @@ public class Player : MonoBehaviour
 
 
         lives--;
+        _uiManager.UpdateLives(lives);
 
         if (lives < 1)
         {
             Destroy(this.gameObject);
             InstantiateExplosion();
+            _gameManager.isGameStarted = false;
+            _uiManager.GameOver();
+
         }
 
     }
